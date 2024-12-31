@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ollama")
-public class TestController {
+public class OllamaController {
     @Autowired
     private OllamaChatModel ollamaChatModel;
-    @RequestMapping("/call")
+    @RequestMapping("/test")
     public String call(@RequestParam("message") String message){
         return ollamaChatModel.call(message);
     }
