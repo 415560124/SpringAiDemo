@@ -23,12 +23,28 @@ spring:
         index-type: HNSW
         distance-type: COSINE_DISTANCE
         dimensions: 768
-        batching-strategy: TOKEN_COUNT # Optional: ?????????????????
-        max-document-batch-size: 10000 # Optional: ?????????
-  # ???????
+        batching-strategy: TOKEN_COUNT
+        max-document-batch-size: 10000
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/springai
     username: postgres
     password: postgres
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.rhy.springaidemo
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
