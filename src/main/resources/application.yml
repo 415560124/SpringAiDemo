@@ -2,6 +2,9 @@ spring:
   application:
     name: SpringAiDemo
   ai:
+    chat:
+      client:
+        enabled: true
     openai:
       api-key: 123
       chat:

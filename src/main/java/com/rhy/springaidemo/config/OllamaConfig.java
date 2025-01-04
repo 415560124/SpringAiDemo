@@ -4,6 +4,12 @@ import com.rhy.springaidemo.entity.common.CustomOllamaEmbeddingModel;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.ai.autoconfigure.ollama.OllamaEmbeddingProperties;
 import org.springframework.ai.autoconfigure.ollama.OllamaInitializationProperties;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.embedding.observation.EmbeddingModelObservationConvention;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.ollama.api.OllamaApi;
@@ -11,6 +17,8 @@ import org.springframework.ai.ollama.api.OllamaModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.ai.ollama.management.ModelManagementOptions;
 import org.springframework.ai.ollama.management.PullModelStrategy;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,6 +44,15 @@ public class OllamaConfig {
         Objects.requireNonNull(embeddingModel);
         observationConvention.ifAvailable(embeddingModel::setObservationConvention);
         return embeddingModel;
+    }
+
+    @Bean
+    public ChatClient chatClient(ChatClient.Builder builder, ChatModel chatModel, VectorStore vectorStore){
+        ChatClient chatClient = builder.defaultAdvisors(
+                new MessageChatMemoryAdvisor(new InMemoryChatMemory()),
+                new QuestionAnswerAdvisor(vectorStore, SearchRequest.builder().similarityThreshold(0.9).topK(5).build())
+        ).build();
+        return chatClient;
     }
 
 }
