@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/documents")
-@Tag(name = "文档接口")
+@Tag(name = "文档模块")
 public class DocumentController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class DocumentController {
      */
     @PostMapping("/upload/embedding")
     @Operation(summary = "上传模型并向量化")
-    public ResponseEntity uploadAndEmbedding(@RequestParam("multipartFile") MultipartFile multipartFile){
+    public ResponseEntity uploadAndEmbedding(@RequestParam("file") MultipartFile multipartFile){
         documentService.uploadAndEmbedding(multipartFile);
         return ResponseEntity.ok().build();
     }

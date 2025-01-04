@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 @Service
@@ -28,7 +29,7 @@ public class DocumentServiceImpl implements IDocumentService {
 
     @Override
     public void uploadAndEmbedding(MultipartFile multipartFile) {
-        File tempFile = FileUtil.createTempFile();
+        File tempFile = FileUtil.createTempFile(new File(Constants.TEMP_FILE_DIR));
         try {
             multipartFile.transferTo(tempFile);
         } catch (IOException e) {
@@ -44,9 +45,10 @@ public class DocumentServiceImpl implements IDocumentService {
         //分割文档
         List<Document> documentsSplit = markdownSplitter.apply(documents);
         documentsSplit.forEach(document -> {
-            Map<String, Object> metadata = document.getMetadata();
-            //问题写入元数据
-            metadata.put("question", document.getContent().split("\n")[0]);
+            String title = document.getContent().split("答：")[0];
+            String replace = title.replace("问：", "");
+            replace = replace.replace("\n", "");
+            document.getMetadata().put("question", replace.trim());
         });
         vectorStore.add(documentsSplit);
         tempFile.delete();

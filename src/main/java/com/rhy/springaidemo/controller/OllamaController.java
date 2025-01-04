@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/ollama")
-@Tag(name = "Ollama接口")
+@Tag(name = "Ollama模块")
 public class OllamaController {
     @Autowired
     private OllamaChatModel ollamaChatModel;
